@@ -2,13 +2,24 @@ import Description from "../Description/Description";
 import Feedback from "../Feedback/Feedback";
 import Options from "../Options/Options";
 import Notification from "../Notification/Notification";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import css from './App.module.css'
 const App = () => {
-    const [clicks, setClicks] = useState({
-        good: 0,
+    const [clicks, setClicks] = useState(()=>{
+    const savedClicks = JSON.parse(localStorage.getItem("saved-clicks"));
+    if (savedClicks !== null) {
+      return savedClicks;
+    }
+    return(
+        {good: 0,
 	neutral: 0,
 	bad: 0,
+    })
     });
+
+    useEffect(() => {
+    localStorage.setItem("saved-clicks", JSON.stringify(clicks));
+    }, [clicks]);
     
     const updateFeedback = feedbackType  => {
         setClicks({
@@ -17,7 +28,7 @@ const App = () => {
         });
 
     }
-     const resetFunction = (clicks)  => {
+     const resetFunction = ()  => {
          setClicks({ good: 0,
 	neutral: 0,
 	bad: 0,})
@@ -26,10 +37,10 @@ const App = () => {
     
 
     const totalFeedback = clicks.good + clicks.neutral + clicks.bad;
-console.log(totalFeedback)
+    const positivePercent = Math.round((clicks.good / totalFeedback) * 100);
 
     return (
-        <>
+        <div className={css.container}>
         <Description />
             <Options
                 resetFunction={resetFunction}
@@ -41,11 +52,12 @@ console.log(totalFeedback)
             {totalFeedback ? <Feedback
                 clicks={clicks}
                 totalFeedback={totalFeedback}
+                positivePercent={positivePercent}
             /> : <Notification />
                 
         }
                  
-        </>
+        </div>
         
     )
 }

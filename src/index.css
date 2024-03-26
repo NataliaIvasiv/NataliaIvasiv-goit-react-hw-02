@@ -28,6 +28,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   padding: 50px;
+  font-weight: 500;
+  background-color: #e0d7c2;
 }
 
 h1 {
@@ -51,6 +53,7 @@ button {
 }
 button:hover {
   border-color: #141415;
+  background-color: #e4a61e;
 }
 button:focus,
 button:focus-visible {
